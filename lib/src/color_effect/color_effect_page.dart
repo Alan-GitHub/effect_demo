@@ -4,9 +4,6 @@ import 'package:effect_demo/src/color_effect/color_mix_effect_sweep.dart';
 import 'package:effect_demo/src/color_effect/color_mix_effect_text.dart';
 import 'package:flutter/material.dart';
 
-import 'eee.dart';
-import 'glowing_border.dart';
-
 class ColorEffectPage extends StatefulWidget {
   const ColorEffectPage({super.key});
 
@@ -90,6 +87,8 @@ class _ColorEffectPageState extends State<ColorEffectPage> {
                 // ),
 
                 // LightBox(),
+
+                // const MovingLight(),
               ],
             )
           ],

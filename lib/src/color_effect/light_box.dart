@@ -17,8 +17,10 @@
 import 'package:flutter/material.dart';
 
 class LightBox extends StatefulWidget {
+  const LightBox({super.key});
+
   @override
-  _LightBoxState createState() => _LightBoxState();
+  State<LightBox> createState() => _LightBoxState();
 }
 
 class _LightBoxState extends State<LightBox> with SingleTickerProviderStateMixin {
@@ -30,7 +32,7 @@ class _LightBoxState extends State<LightBox> with SingleTickerProviderStateMixin
 
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     )
       ..addListener(() {
         setState(() {});
