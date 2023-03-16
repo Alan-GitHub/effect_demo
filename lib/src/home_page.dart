@@ -25,6 +25,12 @@ class _HomePageState extends State<HomePage> {
                     Nav.pushName(RouteName.colorEffectPage);
                   },
                   child: const Text("颜色渐变特效"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.expandCollapsePage);
+                  },
+                  child: const Text("展开收起效果"),
                 )
               ],
             ),

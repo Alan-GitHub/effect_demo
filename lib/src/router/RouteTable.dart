@@ -1,3 +1,4 @@
+import 'package:effect_demo/src/expand_collapse/expand_collapse_page.dart';
 import 'package:flutter/material.dart';
 import 'package:effect_demo/src/home_page.dart';
 
@@ -9,7 +10,7 @@ import '../color_effect/color_effect_page.dart';
 class RouteName {
   static const String root = '/';
   static const String colorEffectPage = 'colorEffectPage';
-
+  static const String expandCollapsePage = 'expandCollapsePage';
 }
 
 ///注册路由页面
@@ -22,6 +23,7 @@ class RouteTable {
     return {
       RouteName.root: (BuildContext context) => const HomePage(),
       RouteName.colorEffectPage: (BuildContext context) => const ColorEffectPage(),
+      RouteName.expandCollapsePage: (BuildContext context) =>  const AnimatedContainerExample(),
     };
   }
 
