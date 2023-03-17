@@ -1,3 +1,4 @@
+import 'package:effect_demo/src/lun_pan/lunpan.dart';
 import 'package:effect_demo/src/router/RouteTable.dart';
 import 'package:effect_demo/src/router/nav.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,13 @@ class _HomePageState extends State<HomePage> {
                     Nav.pushName(RouteName.expandCollapsePage);
                   },
                   child: const Text("展开收起效果"),
-                )
+                ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.kindaCodeDemo);
+                  },
+                  child: const Text("轮盘效果"),
+                ),
               ],
             ),
           ),
