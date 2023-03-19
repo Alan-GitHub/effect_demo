@@ -1,3 +1,4 @@
+import 'package:effect_demo/src/gesture/gesture_demo.dart';
 import 'package:effect_demo/src/lun_pan/lunpan.dart';
 import 'package:effect_demo/src/router/RouteTable.dart';
 import 'package:effect_demo/src/router/nav.dart';
@@ -39,6 +40,13 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: const Text("轮盘效果"),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.animationUsePage);
+                  },
+                  child: const Text("动画入门"),
+                ),
+                GestureDemo(),
               ],
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:effect_demo/src/animation_use/animation_use_page.dart';
 import 'package:effect_demo/src/expand_collapse/expand_collapse_page.dart';
 import 'package:effect_demo/src/lun_pan/context_menu.dart';
 import 'package:effect_demo/src/lun_pan/lunpan.dart';
@@ -14,6 +15,7 @@ class RouteName {
   static const String colorEffectPage = 'colorEffectPage';
   static const String expandCollapsePage = 'expandCollapsePage';
   static const String kindaCodeDemo = 'kindaCodeDemo';
+  static const String animationUsePage = 'animationUsePage';
 }
 
 ///注册路由页面
@@ -28,6 +30,7 @@ class RouteTable {
       RouteName.colorEffectPage: (BuildContext context) => const ColorEffectPage(),
       RouteName.expandCollapsePage: (BuildContext context) =>  const AnimatedContainerExample(),
       RouteName.kindaCodeDemo: (BuildContext context) =>  const KindaCodeDemo(),
+      RouteName.animationUsePage: (BuildContext context) =>  const AnimationUsePage(),
     };
   }
 
