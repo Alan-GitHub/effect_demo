@@ -46,7 +46,13 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: const Text("动画入门"),
                 ),
-                GestureDemo(),
+                const GestureDemo(),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.joystickUsePage);
+                  },
+                  child: const Text("操纵杆"),
+                ),
               ],
             ),
           ),

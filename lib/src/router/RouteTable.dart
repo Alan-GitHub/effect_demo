@@ -1,7 +1,7 @@
 import 'package:effect_demo/src/animation_use/animation_use_page.dart';
+import 'package:effect_demo/src/animation_use/joystick_use_page.dart';
 import 'package:effect_demo/src/expand_collapse/expand_collapse_page.dart';
 import 'package:effect_demo/src/lun_pan/context_menu.dart';
-import 'package:effect_demo/src/lun_pan/lunpan.dart';
 import 'package:flutter/material.dart';
 import 'package:effect_demo/src/home_page.dart';
 
@@ -16,6 +16,7 @@ class RouteName {
   static const String expandCollapsePage = 'expandCollapsePage';
   static const String kindaCodeDemo = 'kindaCodeDemo';
   static const String animationUsePage = 'animationUsePage';
+  static const String joystickUsePage = 'JoystickUsePage';
 }
 
 ///注册路由页面
@@ -31,6 +32,7 @@ class RouteTable {
       RouteName.expandCollapsePage: (BuildContext context) =>  const AnimatedContainerExample(),
       RouteName.kindaCodeDemo: (BuildContext context) =>  const KindaCodeDemo(),
       RouteName.animationUsePage: (BuildContext context) =>  const AnimationUsePage(),
+      RouteName.joystickUsePage: (BuildContext context) =>  const JoystickUsePage(),
     };
   }
 
