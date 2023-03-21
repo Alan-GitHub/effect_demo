@@ -109,42 +109,44 @@ class JoyStickPainter extends CustomPainter {
     var offsetTranslate = offset.value;
 
     /// 操纵杆圆心坐标
-    var offsetTranslateCenter = offsetCenter.value;
+    var offsetCenterTranslate = offsetCenter.value;
 
     /// 计算当前位置坐标点 左半区域 X为负数
-    double x = offsetTranslateCenter.dx - offsetTranslate.dx;
+    double x = offsetTranslate.dx - offsetCenterTranslate.dx;
 
-    /// y轴 下半区域 Y为负数
-    double y = offsetTranslateCenter.dy - offsetTranslate.dy;
+    /// y轴 下半区域 Y为正数   坐标轴水平往右，垂直向下为正
+    double y = offsetTranslate.dy - offsetCenterTranslate.dy;
 
-    /// 反正切函数 通过此函数可以计算出此坐标旋转的弧度 为正 代表X轴逆时针旋转的角度 为负 顺时针旋转角度
-    /// 范围 [-pi] - [pi]
-    double ata = atan2(y, x);
     // print(
     //     "downCenter dx ${offsetTranslateCenter.dx} down dy ${offsetTranslateCenter.dy}");
     // print("down dx $x down dy $y");
-    /// 默认坐标系范围为-pi - pi  顺时针旋转坐标系180度 变为 0 - 2*pi;
-    var thta = ata + pi;
-    // print("angle ${(180 / pi * ata).toInt()}");
 
-    // print("angle $thta");
+    /// 反正切函数 通过此函数可以计算出此坐标旋转的弧度 即方位角（原点至该点的方位角，即该点与 x 轴的夹角）
+    /// 传统坐标轴上（X轴向右、Y轴向上为正），X轴逆时针旋转为正，顺时针旋转为负。 范围 （-pi，pi]
+    /// 计算机中，因为坐标轴的Y轴反向（X轴向右、Y轴向下为正） X轴逆时针旋转为负，顺时针旋转为正。 范围 （-pi，pi]。
+    /// 计算机中的坐标轴可理解为传统坐标轴沿着X轴翻转而来
+    double ata = atan2(y, x);
+
+    /// 默认坐标系范围为-pi - pi  顺时针旋转坐标系180度 变为 0 - 2*pi;
+    // print("angle ${(180 / pi * ata).toInt()}");
     // print("angle $ata");
+
     /// 半径长度
     var r = sqrt(pow(x, 2) + pow(y, 2));
     if (r > bgR) {
-      var dx = bgR * cos(thta) + offsetTranslateCenter.dx; // 求边长 cos
-      var dy = bgR * sin(thta) + offsetTranslateCenter.dy; // 求边长
+      var dx = bgR * cos(ata) + offsetCenterTranslate.dx; // 求边长 cos
+      var dy = bgR * sin(ata) + offsetCenterTranslate.dy; // 求边长
       offsetTranslate = Offset(dx, dy);
     }
 
     // 底圆
     // canvas.drawCircle(
-    //     offsetTranslateCenter,
+    //     offsetCenterTranslate,
     //     bgR,
     //     _paint
     //       ..style = PaintingStyle.fill
     //       ..color = Colors.blue.withOpacity(0.2));
-    canvas.drawImage(bigCircleImage!, offsetTranslateCenter.translate(-bgR, -bgR), _paint);
+    canvas.drawImage(bigCircleImage!, offsetCenterTranslate.translate(-bgR, -bgR), _paint);
 
     /// 手势小圆
     // canvas.drawCircle(
