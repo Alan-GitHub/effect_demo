@@ -1,3 +1,4 @@
+import 'package:effect_demo/src/animation_use/joystick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
@@ -38,28 +39,26 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = 400;
+    double height = 300;
+
     return Scaffold(
       body: Container(
         color: Colors.green,
         alignment: Alignment.center,
-        child: GestureDetector(
-          onPanDown: panDown,
-          onPanUpdate: panUpdate,
-          onPanEnd: panEnd,
-          child: Container(
-            color: Colors.white,
-            width: MediaQuery.of(context).size.width / 2,
-            height: MediaQuery.of(context).size.height / 2,
-            child: isPaint
-                ? CustomPaint(
-                    painter: JoystickComponent(
-                        bigCircleImage: bigCircleImage,
-                        littleCircleImage: littleCircleImage,
-                        bigCircleR: 80,
-                        littleCircleR: 28,
-                        joystickData: joystickData))
-                : Container(),
-          ),
+        child: Container(
+          color: Colors.white,
+          width: width,
+          height: height,
+          child: isPaint
+              ? JoyStick(
+                  size: Size(width, height),
+                  bigCircleImage: bigCircleImage,
+                  littleCircleImage: littleCircleImage,
+                  bgR: 80,
+                  bgr: 28,
+                )
+              : Container(),
         ),
       ),
     );
