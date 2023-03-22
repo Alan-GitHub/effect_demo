@@ -127,10 +127,6 @@ class JoyStickPainter extends CustomPainter {
     /// y轴 下半区域 Y为正数   坐标轴水平往右，垂直向下为正
     double y = offsetTranslate.dy - offsetCenterTranslate.dy;
 
-    // print(
-    //     "downCenter dx ${offsetTranslateCenter.dx} down dy ${offsetTranslateCenter.dy}");
-    // print("down dx $x down dy $y");
-
     /// 反正切函数 通过此函数可以计算出此坐标旋转的弧度 即方位角（原点至该点的方位角，即该点与 x 轴的夹角）
     /// 传统坐标轴上（X轴向右、Y轴向上为正），X轴逆时针旋转为正，顺时针旋转为负。 范围 （-pi，pi]
     /// 计算机中，因为坐标轴的Y轴反向（X轴向右、Y轴向下为正） X轴逆时针旋转为负，顺时针旋转为正。 范围 （-pi，pi]。
@@ -139,10 +135,11 @@ class JoyStickPainter extends CustomPainter {
 
     /// 默认坐标系范围为-pi - pi  顺时针旋转坐标系180度 变为 0 - 2*pi;
     // print("ata ${(180 / pi * ata).toInt()}");
-    // print("angle $ata");
 
     /// 半径长度
     var r = sqrt(pow(x, 2) + pow(y, 2));
+
+    /// 限定小球在底圆内运动
     if (r > bgR) {
       var dx = bgR * cos(ata) + offsetCenterTranslate.dx; // 求边长 cos
       var dy = bgR * sin(ata) + offsetCenterTranslate.dy; // 求边长
@@ -151,6 +148,7 @@ class JoyStickPainter extends CustomPainter {
       r = bgR;
     }
 
+    /// 限定小球在底圆指定范围内运动
     if (ata.abs() < thresholdArc.abs()) {
       double theta = thresholdArc;
 

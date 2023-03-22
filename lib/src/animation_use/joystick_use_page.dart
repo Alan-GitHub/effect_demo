@@ -59,7 +59,7 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
                   littleCircleImage: littleCircleImage,
                   bgR: 80,
                   bgr: 28,
-                  thresholdArc: 30 * pi / 180,
+                  thresholdArc: 50 * pi / 180,
                 )
               : Container(),
         ),
