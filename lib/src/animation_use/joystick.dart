@@ -12,6 +12,7 @@ class JoyStick extends StatefulWidget {
     required this.bgR,
     required this.bgr,
     this.thresholdArc = 0,
+    required this.onMove,
   }) : super(key: key);
 
   final Size size;
@@ -20,6 +21,7 @@ class JoyStick extends StatefulWidget {
   final double bgR; // 底圆半径
   final double bgr; // 小圆半径
   final double thresholdArc;
+  final void Function(double arc, double dx, double dy, double r) onMove;
 
   @override
   State<JoyStick> createState() => _JoyStickState();
@@ -47,6 +49,7 @@ class _JoyStickState extends State<JoyStick> {
             bigCircleImage: widget.bigCircleImage,
             littleCircleImage: widget.littleCircleImage,
             thresholdArc: widget.thresholdArc,
+            onMove: widget.onMove,
             listenable: Listenable.merge([_offset, _offsetCenter])),
       ),
     );
@@ -91,6 +94,7 @@ class JoyStickPainter extends CustomPainter {
     this.bigCircleImage,
     this.littleCircleImage,
     required this.thresholdArc,
+    required this.onMove,
     required Listenable listenable,
   }) : super(repaint: listenable) {
     _paint = Paint();
@@ -106,10 +110,12 @@ class JoyStickPainter extends CustomPainter {
   /// 弧度阈值-禁止区域的角度的一半，弧度表示
   final double thresholdArc;
 
+  final void Function(double arc, double dx, double dy, double r) onMove;
+
   late Paint _paint;
 
   /// 进入禁止区前的弧度
-  double arcBeforeEnterForbiddenZone = 0;
+  double _arcBeforeEnterForbiddenZone = 0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -152,11 +158,9 @@ class JoyStickPainter extends CustomPainter {
     if (ata.abs() < thresholdArc.abs()) {
       double theta = thresholdArc;
 
-      if (arcBeforeEnterForbiddenZone < 0) {
+      if (_arcBeforeEnterForbiddenZone < 0) {
         theta = -thresholdArc;
       }
-
-      // print("thresholdArc ${(180 / pi * theta).toInt()}");
 
       var dx = r * cos(theta) + offsetCenterTranslate.dx; // 求边长 cos
       var dy = r * sin(theta) + offsetCenterTranslate.dy; // 求边长
@@ -164,7 +168,7 @@ class JoyStickPainter extends CustomPainter {
     } else if (ata.abs() > (pi - thresholdArc).abs()) {
       double theta = pi - thresholdArc;
 
-      if (arcBeforeEnterForbiddenZone < 0) {
+      if (_arcBeforeEnterForbiddenZone < 0) {
         theta = -(pi - thresholdArc);
       }
 
@@ -172,8 +176,12 @@ class JoyStickPainter extends CustomPainter {
       var dy = r * sin(theta) + offsetCenterTranslate.dy; // 求边长
       offsetTranslate = Offset(dx, dy);
     } else {
-      arcBeforeEnterForbiddenZone = ata;
+      _arcBeforeEnterForbiddenZone = ata;
     }
+
+    /// 回调通知上层移动的数据
+    onMove(atan2(offsetTranslate.dy, offsetTranslate.dx), offsetTranslate.dx - offsetCenterTranslate.dx,
+        offsetTranslate.dy - offsetCenterTranslate.dy, r);
 
     // 底圆
     // canvas.drawCircle(

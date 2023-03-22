@@ -60,6 +60,9 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
                   bgR: 80,
                   bgr: 28,
                   thresholdArc: 50 * pi / 180,
+                  onMove: (arc, x, y, r) {
+                    print("arc=$arc, x=$x, y=$y, r=$r");
+                  },
                 )
               : Container(),
         ),
