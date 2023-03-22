@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:effect_demo/src/animation_use/joystick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,6 +59,7 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
                   littleCircleImage: littleCircleImage,
                   bgR: 80,
                   bgr: 28,
+                  thresholdArc: 30 * pi / 180,
                 )
               : Container(),
         ),

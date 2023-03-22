@@ -11,6 +11,7 @@ class JoyStick extends StatefulWidget {
     this.littleCircleImage,
     required this.bgR,
     required this.bgr,
+    this.thresholdArc = 0,
   }) : super(key: key);
 
   final Size size;
@@ -18,6 +19,7 @@ class JoyStick extends StatefulWidget {
   final ui.Image? littleCircleImage;
   final double bgR; // 底圆半径
   final double bgr; // 小圆半径
+  final double thresholdArc;
 
   @override
   State<JoyStick> createState() => _JoyStickState();
@@ -44,6 +46,7 @@ class _JoyStickState extends State<JoyStick> {
             bgR: widget.bgR,
             bigCircleImage: widget.bigCircleImage,
             littleCircleImage: widget.littleCircleImage,
+            thresholdArc: widget.thresholdArc,
             listenable: Listenable.merge([_offset, _offsetCenter])),
       ),
     );
@@ -87,6 +90,7 @@ class JoyStickPainter extends CustomPainter {
     required this.bgR,
     this.bigCircleImage,
     this.littleCircleImage,
+    required this.thresholdArc,
     required Listenable listenable,
   }) : super(repaint: listenable) {
     _paint = Paint();
@@ -99,7 +103,13 @@ class JoyStickPainter extends CustomPainter {
   final ui.Image? bigCircleImage;
   final ui.Image? littleCircleImage;
 
+  /// 弧度阈值-禁止区域的角度的一半，弧度表示
+  final double thresholdArc;
+
   late Paint _paint;
+
+  /// 进入禁止区前的弧度
+  double arcBeforeEnterForbiddenZone = 0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -128,7 +138,7 @@ class JoyStickPainter extends CustomPainter {
     double ata = atan2(y, x);
 
     /// 默认坐标系范围为-pi - pi  顺时针旋转坐标系180度 变为 0 - 2*pi;
-    // print("angle ${(180 / pi * ata).toInt()}");
+    // print("ata ${(180 / pi * ata).toInt()}");
     // print("angle $ata");
 
     /// 半径长度
@@ -137,6 +147,34 @@ class JoyStickPainter extends CustomPainter {
       var dx = bgR * cos(ata) + offsetCenterTranslate.dx; // 求边长 cos
       var dy = bgR * sin(ata) + offsetCenterTranslate.dy; // 求边长
       offsetTranslate = Offset(dx, dy);
+
+      r = bgR;
+    }
+
+    if (ata.abs() < thresholdArc.abs()) {
+      double theta = thresholdArc;
+
+      if (arcBeforeEnterForbiddenZone < 0) {
+        theta = -thresholdArc;
+      }
+
+      // print("thresholdArc ${(180 / pi * theta).toInt()}");
+
+      var dx = r * cos(theta) + offsetCenterTranslate.dx; // 求边长 cos
+      var dy = r * sin(theta) + offsetCenterTranslate.dy; // 求边长
+      offsetTranslate = Offset(dx, dy);
+    } else if (ata.abs() > (pi - thresholdArc).abs()) {
+      double theta = pi - thresholdArc;
+
+      if (arcBeforeEnterForbiddenZone < 0) {
+        theta = -(pi - thresholdArc);
+      }
+
+      var dx = r * cos(theta) + offsetCenterTranslate.dx; // 求边长 cos
+      var dy = r * sin(theta) + offsetCenterTranslate.dy; // 求边长
+      offsetTranslate = Offset(dx, dy);
+    } else {
+      arcBeforeEnterForbiddenZone = ata;
     }
 
     // 底圆
