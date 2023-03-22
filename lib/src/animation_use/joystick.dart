@@ -117,6 +117,9 @@ class JoyStickPainter extends CustomPainter {
   /// 进入禁止区前的弧度
   double _arcBeforeEnterForbiddenZone = 0;
 
+  /// 有效弧度， 因为底圆可能有禁止滑动区，所以弧度范围非完整圆
+  double _effectiveArc = 0;
+
   @override
   void paint(Canvas canvas, Size size) {
     canvas.translate(size.width / 2, size.height / 2);
@@ -156,31 +159,32 @@ class JoyStickPainter extends CustomPainter {
 
     /// 限定小球在底圆指定范围内运动
     if (ata.abs() < thresholdArc.abs()) {
-      double theta = thresholdArc;
+      _effectiveArc = thresholdArc;
 
       if (_arcBeforeEnterForbiddenZone < 0) {
-        theta = -thresholdArc;
+        _effectiveArc = -thresholdArc;
       }
 
-      var dx = r * cos(theta) + offsetCenterTranslate.dx; // 求边长 cos
-      var dy = r * sin(theta) + offsetCenterTranslate.dy; // 求边长
+      var dx = r * cos(_effectiveArc) + offsetCenterTranslate.dx; // 求边长 cos
+      var dy = r * sin(_effectiveArc) + offsetCenterTranslate.dy; // 求边长
       offsetTranslate = Offset(dx, dy);
     } else if (ata.abs() > (pi - thresholdArc).abs()) {
-      double theta = pi - thresholdArc;
+      _effectiveArc = pi - thresholdArc;
 
       if (_arcBeforeEnterForbiddenZone < 0) {
-        theta = -(pi - thresholdArc);
+        _effectiveArc = -(pi - thresholdArc);
       }
 
-      var dx = r * cos(theta) + offsetCenterTranslate.dx; // 求边长 cos
-      var dy = r * sin(theta) + offsetCenterTranslate.dy; // 求边长
+      var dx = r * cos(_effectiveArc) + offsetCenterTranslate.dx; // 求边长 cos
+      var dy = r * sin(_effectiveArc) + offsetCenterTranslate.dy; // 求边长
       offsetTranslate = Offset(dx, dy);
     } else {
       _arcBeforeEnterForbiddenZone = ata;
+      _effectiveArc = ata;
     }
 
     /// 回调通知上层移动的数据
-    onMove(atan2(offsetTranslate.dy, offsetTranslate.dx), offsetTranslate.dx - offsetCenterTranslate.dx,
+    onMove(r == 0 ? 0 : _effectiveArc, offsetTranslate.dx - offsetCenterTranslate.dx,
         offsetTranslate.dy - offsetCenterTranslate.dy, r);
 
     // 底圆
