@@ -58,10 +58,11 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
                   bigCircleImage: bigCircleImage,
                   littleCircleImage: littleCircleImage,
                   bgR: 80,
-                  bgr: 28,
+                  bgr: 23,
                   thresholdArc: 50 * pi / 180,
+                  deadZoneArc: 10 * pi / 180,
                   onMove: (arc, x, y, r) {
-                    print("arc=$arc, x=$x, y=$y, r=$r");
+                    // print("arc=$arc, x=$x, y=$y, r=$r");
                   },
                 )
               : Container(),

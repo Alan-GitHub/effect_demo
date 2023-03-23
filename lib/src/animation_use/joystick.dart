@@ -12,6 +12,7 @@ class JoyStick extends StatefulWidget {
     required this.bgR,
     required this.bgr,
     this.thresholdArc = 0,
+    this.deadZoneArc = 0,
     required this.onMove,
   }) : super(key: key);
 
@@ -21,6 +22,7 @@ class JoyStick extends StatefulWidget {
   final double bgR; // 底圆半径
   final double bgr; // 小圆半径
   final double thresholdArc;
+  final double deadZoneArc;
   final void Function(double arc, double dx, double dy, double r) onMove;
 
   @override
@@ -49,6 +51,7 @@ class _JoyStickState extends State<JoyStick> {
             bigCircleImage: widget.bigCircleImage,
             littleCircleImage: widget.littleCircleImage,
             thresholdArc: widget.thresholdArc,
+            deadZoneArc: widget.deadZoneArc,
             onMove: widget.onMove,
             listenable: Listenable.merge([_offset, _offsetCenter])),
       ),
@@ -94,6 +97,7 @@ class JoyStickPainter extends CustomPainter {
     this.bigCircleImage,
     this.littleCircleImage,
     required this.thresholdArc,
+    required this.deadZoneArc,
     required this.onMove,
     required Listenable listenable,
   }) : super(repaint: listenable) {
@@ -110,12 +114,12 @@ class JoyStickPainter extends CustomPainter {
   /// 弧度阈值-禁止区域的角度的一半，弧度表示
   final double thresholdArc;
 
+  /// 死区阈值 - 处于禁止区内，越过死区阈值即调整小球位置，弧度表示
+  final double deadZoneArc;
+
   final void Function(double arc, double dx, double dy, double r) onMove;
 
   late Paint _paint;
-
-  /// 进入禁止区前的弧度
-  double _arcBeforeEnterForbiddenZone = 0;
 
   /// 有效弧度， 因为底圆可能有禁止滑动区，所以弧度范围非完整圆
   double _effectiveArc = 0;
@@ -159,9 +163,9 @@ class JoyStickPainter extends CustomPainter {
 
     /// 限定小球在底圆指定范围内运动
     if (ata.abs() < thresholdArc.abs()) {
-      _effectiveArc = thresholdArc;
-
-      if (_arcBeforeEnterForbiddenZone < 0) {
+      if (ata > deadZoneArc) {
+        _effectiveArc = thresholdArc;
+      } else if (ata < -deadZoneArc) {
         _effectiveArc = -thresholdArc;
       }
 
@@ -169,9 +173,9 @@ class JoyStickPainter extends CustomPainter {
       var dy = r * sin(_effectiveArc) + offsetCenterTranslate.dy; // 求边长
       offsetTranslate = Offset(dx, dy);
     } else if (ata.abs() > (pi - thresholdArc).abs()) {
-      _effectiveArc = pi - thresholdArc;
-
-      if (_arcBeforeEnterForbiddenZone < 0) {
+      if (ata > 0 && ata < pi - deadZoneArc) {
+        _effectiveArc = pi - thresholdArc;
+      } else if (ata < 0 && ata > -(pi - deadZoneArc)) {
         _effectiveArc = -(pi - thresholdArc);
       }
 
@@ -179,7 +183,6 @@ class JoyStickPainter extends CustomPainter {
       var dy = r * sin(_effectiveArc) + offsetCenterTranslate.dy; // 求边长
       offsetTranslate = Offset(dx, dy);
     } else {
-      _arcBeforeEnterForbiddenZone = ata;
       _effectiveArc = ata;
     }
 
