@@ -121,9 +121,6 @@ class JoyStickPainter extends CustomPainter {
 
   late Paint _paint;
 
-  /// 进入禁止区前的弧度
-  double _arcBeforeEnterForbiddenZone = 0;
-
   /// 有效弧度， 因为底圆可能有禁止滑动区，所以弧度范围非完整圆
   double _effectiveArc = 0;
 
@@ -164,11 +161,6 @@ class JoyStickPainter extends CustomPainter {
       r = bgR;
     }
 
-    if (r == 0) {
-      _arcBeforeEnterForbiddenZone = 0;
-      _effectiveArc = 0;
-    }
-
     /// 限定小球在底圆指定范围内运动
     if (ata.abs() < thresholdArc.abs()) {
       if (ata > deadZoneArc) {
@@ -177,13 +169,12 @@ class JoyStickPainter extends CustomPainter {
         _effectiveArc = -thresholdArc;
       }
 
-      if (_arcBeforeEnterForbiddenZone == 0 && ata >= -deadZoneArc && ata <= deadZoneArc) {
+      if (_effectiveArc.abs() != thresholdArc && ata >= -deadZoneArc && ata <= deadZoneArc) {
         offsetTranslate = offsetCenterTranslate;
       } else {
         var dx = r * cos(_effectiveArc) + offsetCenterTranslate.dx; // 求边长 cos
         var dy = r * sin(_effectiveArc) + offsetCenterTranslate.dy; // 求边长
         offsetTranslate = Offset(dx, dy);
-        _arcBeforeEnterForbiddenZone = _effectiveArc;
       }
     } else if (ata.abs() > (pi - thresholdArc)) {
       if (ata > 0 && ata < pi - deadZoneArc) {
@@ -192,16 +183,14 @@ class JoyStickPainter extends CustomPainter {
         _effectiveArc = -(pi - thresholdArc);
       }
 
-      if (_arcBeforeEnterForbiddenZone == 0 && (ata.abs() >= (pi - deadZoneArc))) {
+      if ((_effectiveArc.abs() != pi - thresholdArc) && (ata.abs() >= (pi - deadZoneArc))) {
         offsetTranslate = offsetCenterTranslate;
       } else {
         var dx = r * cos(_effectiveArc) + offsetCenterTranslate.dx; // 求边长 cos
         var dy = r * sin(_effectiveArc) + offsetCenterTranslate.dy; // 求边长
         offsetTranslate = Offset(dx, dy);
-        _arcBeforeEnterForbiddenZone = _effectiveArc;
       }
     } else {
-      _arcBeforeEnterForbiddenZone = ata;
       _effectiveArc = ata;
     }
 
