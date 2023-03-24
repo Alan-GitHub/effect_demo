@@ -44,7 +44,7 @@ class _JoyStickState extends State<JoyStick> {
   final ValueNotifier<Offset> _offsetCenter = ValueNotifier(Offset.zero);
   // 小圆圆心坐标
   final ValueNotifier<Offset> _offset = ValueNotifier(Offset.zero);
-
+  // 操纵杆状态
   ValueNotifier<PanStatus> status = ValueNotifier(PanStatus.end);
 
   @override
@@ -223,6 +223,7 @@ class JoyStickPainter extends CustomPainter {
     onMove(r == 0 ? 0 : _effectiveArc, offsetTranslate.dx - offsetCenterTranslate.dx,
         offsetTranslate.dy - offsetCenterTranslate.dy, r);
 
+    /// 松开手指，静止状态下操纵杆
     if (status.value == PanStatus.end) {
       /// 底圆
       if (bigCircleImage != null) {
@@ -243,7 +244,7 @@ class JoyStickPainter extends CustomPainter {
           ..color = Colors.blue.withOpacity(0.6);
         canvas.drawCircle(offsetTranslate, bgr, _paint);
       }
-    } else {
+    } else {  /// 手指移动中操纵杆
       /// 底圆
       if (bigCircleImageSport != null) {
         canvas.drawImage(bigCircleImageSport!, offsetCenterTranslate.translate(-bgR, -bgR), _paint);
