@@ -53,6 +53,12 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: const Text("操纵杆"),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.verticalJoystickUsePage);
+                  },
+                  child: const Text("竖直操纵杆"),
+                ),
               ],
             ),
           ),
