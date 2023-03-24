@@ -3,12 +3,20 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+enum PanStatus {
+  down,
+  update,
+  end,
+}
+
 class JoyStick extends StatefulWidget {
   const JoyStick({
     Key? key,
     required this.size,
     this.bigCircleImage,
     this.littleCircleImage,
+    this.bigCircleImageSport,
+    this.littleCircleImageSport,
     required this.bgR,
     required this.bgr,
     this.thresholdArc = 0,
@@ -19,6 +27,8 @@ class JoyStick extends StatefulWidget {
   final Size size;
   final ui.Image? bigCircleImage;
   final ui.Image? littleCircleImage;
+  final ui.Image? bigCircleImageSport;
+  final ui.Image? littleCircleImageSport;
   final double bgR; // 底圆半径
   final double bgr; // 小圆半径
   final double thresholdArc;
@@ -35,6 +45,8 @@ class _JoyStickState extends State<JoyStick> {
   // 小圆圆心坐标
   final ValueNotifier<Offset> _offset = ValueNotifier(Offset.zero);
 
+  ValueNotifier<PanStatus> status = ValueNotifier(PanStatus.end);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -50,8 +62,11 @@ class _JoyStickState extends State<JoyStick> {
             bgR: widget.bgR,
             bigCircleImage: widget.bigCircleImage,
             littleCircleImage: widget.littleCircleImage,
+            bigCircleImageSport: widget.bigCircleImageSport,
+            littleCircleImageSport: widget.littleCircleImageSport,
             thresholdArc: widget.thresholdArc,
             deadZoneArc: widget.deadZoneArc,
+            status: status,
             onMove: widget.onMove,
             listenable: Listenable.merge([_offset, _offsetCenter])),
       ),
@@ -59,6 +74,7 @@ class _JoyStickState extends State<JoyStick> {
   }
 
   down(DragDownDetails details) {
+    status.value = PanStatus.down;
     Offset offset = details.localPosition;
 
     if (offset.dx > widget.size.width - widget.bgR) {
@@ -78,11 +94,13 @@ class _JoyStickState extends State<JoyStick> {
   }
 
   reset(DragEndDetails details) {
+    status.value = PanStatus.end;
     _offset.value = Offset.zero;
     _offsetCenter.value = Offset.zero;
   }
 
   update(DragUpdateDetails details) {
+    status.value = PanStatus.update;
     final offset = details.localPosition;
     _offset.value = Offset(offset.dx, offset.dy).translate(-widget.size.width / 2, -widget.size.height / 2);
   }
@@ -96,8 +114,11 @@ class JoyStickPainter extends CustomPainter {
     required this.bgR,
     this.bigCircleImage,
     this.littleCircleImage,
+    this.bigCircleImageSport,
+    this.littleCircleImageSport,
     required this.thresholdArc,
     required this.deadZoneArc,
+    required this.status,
     required this.onMove,
     required Listenable listenable,
   }) : super(repaint: listenable) {
@@ -110,12 +131,16 @@ class JoyStickPainter extends CustomPainter {
   late double bgR; // 底圆半径
   final ui.Image? bigCircleImage;
   final ui.Image? littleCircleImage;
+  final ui.Image? bigCircleImageSport;
+  final ui.Image? littleCircleImageSport;
 
   /// 弧度阈值-禁止区域的角度的一半，弧度表示
   final double thresholdArc;
 
   /// 死区阈值 - 处于禁止区内，越过死区阈值即调整小球位置，弧度表示
   final double deadZoneArc;
+
+  final ValueNotifier<PanStatus> status;
 
   final void Function(double arc, double dx, double dy, double r) onMove;
 
@@ -198,23 +223,51 @@ class JoyStickPainter extends CustomPainter {
     onMove(r == 0 ? 0 : _effectiveArc, offsetTranslate.dx - offsetCenterTranslate.dx,
         offsetTranslate.dy - offsetCenterTranslate.dy, r);
 
-    // 底圆
-    // canvas.drawCircle(
-    //     offsetCenterTranslate,
-    //     bgR,
-    //     _paint
-    //       ..style = PaintingStyle.fill
-    //       ..color = Colors.blue.withOpacity(0.2));
-    canvas.drawImage(bigCircleImage!, offsetCenterTranslate.translate(-bgR, -bgR), _paint);
+    if (status.value == PanStatus.end) {
+      /// 底圆
+      if (bigCircleImage != null) {
+        canvas.drawImage(bigCircleImage!, offsetCenterTranslate.translate(-bgR, -bgR), _paint);
+      } else {
+        _paint
+          ..style = PaintingStyle.fill
+          ..color = Colors.blue.withOpacity(0.2);
+        canvas.drawCircle(offsetCenterTranslate, bgR, _paint);
+      }
 
-    /// 手势小圆
-    // canvas.drawCircle(
-    //     offsetTranslate,
-    //     bgr,
-    //     _paint
-    //       ..style = PaintingStyle.fill
-    //       ..color = Colors.blue.withOpacity(0.6));
-    canvas.drawImage(littleCircleImage!, offsetTranslate.translate(-bgr, -bgr), _paint);
+      /// 手势小圆
+      if (littleCircleImage != null) {
+        canvas.drawImage(littleCircleImage!, offsetTranslate.translate(-bgr, -bgr), _paint);
+      } else {
+        _paint
+          ..style = PaintingStyle.fill
+          ..color = Colors.blue.withOpacity(0.6);
+        canvas.drawCircle(offsetTranslate, bgr, _paint);
+      }
+    } else {
+      /// 底圆
+      if (bigCircleImageSport != null) {
+        canvas.drawImage(bigCircleImageSport!, offsetCenterTranslate.translate(-bgR, -bgR), _paint);
+      } else if (bigCircleImage != null) {
+        canvas.drawImage(bigCircleImage!, offsetCenterTranslate.translate(-bgR, -bgR), _paint);
+      } else {
+        _paint
+          ..style = PaintingStyle.fill
+          ..color = Colors.blue.withOpacity(0.2);
+        canvas.drawCircle(offsetCenterTranslate, bgR, _paint);
+      }
+
+      /// 手势小圆
+      if (littleCircleImageSport != null) {
+        canvas.drawImage(littleCircleImageSport!, offsetTranslate.translate(-bgr, -bgr), _paint);
+      } else if (littleCircleImage != null) {
+        canvas.drawImage(littleCircleImage!, offsetTranslate.translate(-bgr, -bgr), _paint);
+      } else {
+        _paint
+          ..style = PaintingStyle.fill
+          ..color = Colors.blue.withOpacity(0.6);
+        canvas.drawCircle(offsetTranslate, bgr, _paint);
+      }
+    }
   }
 
   @override

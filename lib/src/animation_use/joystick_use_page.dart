@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 
-import 'joystick_component.dart';
-
 class JoystickData {
   JoystickData(this.offset, this.panDetail);
 
@@ -25,6 +23,8 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
   bool isPaint = false;
   ui.Image? bigCircleImage;
   ui.Image? littleCircleImage;
+  ui.Image? bigCircleImageSport;
+  ui.Image? littleCircleImageSport;
 
   //默认位置
   static const Offset defaultOffset = Offset(200, 100);
@@ -37,6 +37,8 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
     isPaint = false;
     loadIamge(1, "assets/images/drive_wheel_outline.png");
     loadIamge(2, "assets/images/drive_wheel_control.png");
+    loadIamge(3, "assets/images/drive_wheel_outline_sport.png");
+    loadIamge(4, "assets/images/drive_wheel_control_sport.png");
   }
 
   @override
@@ -57,6 +59,8 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
                   size: Size(width, height),
                   bigCircleImage: bigCircleImage,
                   littleCircleImage: littleCircleImage,
+                  bigCircleImageSport: bigCircleImageSport,
+                  littleCircleImageSport: littleCircleImageSport,
                   bgR: 80,
                   bgr: 23,
                   thresholdArc: 50 * pi / 180,
@@ -93,6 +97,10 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
       bigCircleImage = await decodeImageFromList(bytes);
     } else if (no == 2) {
       littleCircleImage = await decodeImageFromList(bytes);
+    } else if (no == 3) {
+      bigCircleImageSport = await decodeImageFromList(bytes);
+    } else if (no == 4) {
+      littleCircleImageSport = await decodeImageFromList(bytes);
     }
 
     if (bigCircleImage != null && littleCircleImage != null) {
