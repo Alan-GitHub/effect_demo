@@ -1,6 +1,12 @@
 import 'package:effect_demo/src/constant/RCColors.dart';
 import 'package:flutter/material.dart';
 
+enum VerticalDragStatus {
+  down,
+  update,
+  end,
+}
+
 class VerticalJoyStick extends StatefulWidget {
   const VerticalJoyStick({
     super.key,
@@ -22,6 +28,8 @@ class VerticalJoyStick extends StatefulWidget {
 class _VerticalJoyStickState extends State<VerticalJoyStick> {
   // 小圆圆心坐标
   late final ValueNotifier<Offset> _offset;
+  // 操纵杆状态
+  ValueNotifier<VerticalDragStatus> status = ValueNotifier(VerticalDragStatus.end);
 
   @override
   void initState() {
@@ -42,6 +50,7 @@ class _VerticalJoyStickState extends State<VerticalJoyStick> {
           rRectRadius: widget.rRectRadius,
           offset: _offset,
           radius: widget.radius,
+          status: status,
           onMove: widget.onMove,
           listenable: _offset,
         ),
@@ -50,6 +59,8 @@ class _VerticalJoyStickState extends State<VerticalJoyStick> {
   }
 
   down(DragDownDetails details) {
+    status.value = VerticalDragStatus.down;
+
     double rx = widget.size.width / 2;
     double ry = details.localPosition.dy;
 
@@ -63,6 +74,8 @@ class _VerticalJoyStickState extends State<VerticalJoyStick> {
   }
 
   update(DragUpdateDetails details) {
+    status.value = VerticalDragStatus.update;
+
     double rx = widget.size.width / 2;
     double ry = details.localPosition.dy;
 
@@ -76,6 +89,8 @@ class _VerticalJoyStickState extends State<VerticalJoyStick> {
   }
 
   end(DragEndDetails details) {
+    status.value = VerticalDragStatus.end;
+
     _offset.value = Offset(widget.size.width / 2, widget.size.height / 2);
   }
 }
@@ -85,16 +100,22 @@ class VerticalJoyStickPainter extends CustomPainter {
     this.rRectRadius = 0,
     required this.offset,
     required this.radius,
+    required this.status,
     required this.onMove,
     required Listenable listenable,
   }) : super(repaint: listenable);
 
   /// 底圆矩形的圆角半径
   final double rRectRadius;
+
   /// 控制球圆心
   final ValueNotifier<Offset> offset;
+
   /// 控制球半径
   final double radius;
+
+  /// 手势状态
+  final ValueNotifier<VerticalDragStatus> status;
 
   final void Function(double dy) onMove;
 
@@ -106,6 +127,7 @@ class VerticalJoyStickPainter extends CustomPainter {
 
     /// 计算控制球圆心相对底图矩形中心的y坐标
     double dy = offset.value.dy - size.height / 2;
+
     /// 回调通知上层移动的数据 - y坐标
     onMove(dy);
 
@@ -133,6 +155,9 @@ class VerticalJoyStickPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5
       ..color = RCColors.white;
+    if (status.value != VerticalDragStatus.end) {
+      _paint.color = RCColors.blue_2FD9F8;
+    }
     canvas.drawCircle(offset.value, radius, _paint);
 
     /// 小球球里面的三角形（上）
@@ -147,6 +172,10 @@ class VerticalJoyStickPainter extends CustomPainter {
     /// 适配屏幕时的缩放比例
     double scale = radius / 24;
 
+    if (dy < 0) {
+      _paint.color = RCColors.blue_2FD9F8;
+    }
+
     var path1 = Path();
     path1.moveTo(rx - 6 * scale, ry - 3 * scale);
     path1.lineTo(rx, ry - 11 * scale);
@@ -155,6 +184,11 @@ class VerticalJoyStickPainter extends CustomPainter {
     canvas.drawPath(path1, _paint);
 
     /// 小球球里面的三角形（下）
+    _paint.color = RCColors.white;
+    if (dy > 0) {
+      _paint.color = RCColors.blue_2FD9F8;
+    }
+
     var path2 = Path();
     path2.moveTo(rx - 6 * scale, ry + 3 * scale);
     path2.lineTo(rx, ry + 11 * scale);

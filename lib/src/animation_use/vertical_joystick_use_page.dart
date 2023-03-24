@@ -16,7 +16,7 @@ class _VerticalJoystickUsePageState extends State<VerticalJoystickUsePage> {
         color: Colors.green,
         alignment: Alignment.center,
         child: VerticalJoyStick(
-          size: Size(50, 144),
+          size: const Size(50, 144),
           rRectRadius: 50,
           radius: 24,
           onMove: (y) {
