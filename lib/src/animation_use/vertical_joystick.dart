@@ -7,11 +7,13 @@ class VerticalJoyStick extends StatefulWidget {
     required this.size,
     this.rRectRadius = 0,
     required this.radius,
+    required this.onMove,
   });
 
   final Size size;
   final double rRectRadius;
   final double radius;
+  final void Function(double dy) onMove;
 
   @override
   State<VerticalJoyStick> createState() => _VerticalJoyStickState();
@@ -40,6 +42,7 @@ class _VerticalJoyStickState extends State<VerticalJoyStick> {
           rRectRadius: widget.rRectRadius,
           offset: _offset,
           radius: widget.radius,
+          onMove: widget.onMove,
           listenable: _offset,
         ),
       ),
@@ -82,19 +85,29 @@ class VerticalJoyStickPainter extends CustomPainter {
     this.rRectRadius = 0,
     required this.offset,
     required this.radius,
+    required this.onMove,
     required Listenable listenable,
   }) : super(repaint: listenable);
 
   /// 底圆矩形的圆角半径
   final double rRectRadius;
+  /// 控制球圆心
   final ValueNotifier<Offset> offset;
+  /// 控制球半径
   final double radius;
+
+  final void Function(double dy) onMove;
 
   final Paint _paint = Paint();
 
   @override
   void paint(Canvas canvas, Size size) {
     Rect rect = Offset.zero & size;
+
+    /// 计算控制球圆心相对底图矩形中心的y坐标
+    double dy = offset.value.dy - size.height / 2;
+    /// 回调通知上层移动的数据 - y坐标
+    onMove(dy);
 
     /// 绘制底图圆角矩形
     _paint

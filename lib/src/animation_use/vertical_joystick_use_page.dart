@@ -15,10 +15,13 @@ class _VerticalJoystickUsePageState extends State<VerticalJoystickUsePage> {
       body: Container(
         color: Colors.green,
         alignment: Alignment.center,
-        child: const VerticalJoyStick(
+        child: VerticalJoyStick(
           size: Size(50, 144),
           rRectRadius: 50,
           radius: 24,
+          onMove: (y) {
+            // print("y=$y");
+          },
         ),
       ),
     );
