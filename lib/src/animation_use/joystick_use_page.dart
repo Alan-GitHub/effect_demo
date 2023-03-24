@@ -35,10 +35,19 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
     super.initState();
 
     isPaint = false;
-    loadIamge(1, "assets/images/drive_wheel_outline.png");
-    loadIamge(2, "assets/images/drive_wheel_control.png");
-    loadIamge(3, "assets/images/drive_wheel_outline_sport.png");
-    loadIamge(4, "assets/images/drive_wheel_control_sport.png");
+
+    Future.wait([
+      loadImage("assets/images/drive_wheel_outline.png"),
+      loadImage("assets/images/drive_wheel_control.png"),
+      loadImage("assets/images/drive_wheel_outline_sport.png"),
+      loadImage("assets/images/drive_wheel_control_sport.png"),
+    ]).then((value) => setState(() {
+          isPaint = true;
+          bigCircleImage = value[0];
+          littleCircleImage = value[1];
+          bigCircleImageSport = value[2];
+          littleCircleImageSport = value[3];
+        }));
   }
 
   @override
@@ -87,26 +96,10 @@ class _JoystickUsePageState extends State<JoystickUsePage> {
     joystickData.value = JoystickData(defaultOffset, details);
   }
 
-  void loadIamge(int no, String path) async {
+  Future<ui.Image> loadImage(String path) {
     // 加载资源文件
-    final data = await rootBundle.load(path);
     // 把资源文件转换成Uint8List类型
-    final bytes = data.buffer.asUint8List();
     // 解析Uint8List类型的数据图片
-    if (no == 1) {
-      bigCircleImage = await decodeImageFromList(bytes);
-    } else if (no == 2) {
-      littleCircleImage = await decodeImageFromList(bytes);
-    } else if (no == 3) {
-      bigCircleImageSport = await decodeImageFromList(bytes);
-    } else if (no == 4) {
-      littleCircleImageSport = await decodeImageFromList(bytes);
-    }
-
-    if (bigCircleImage != null && littleCircleImage != null) {
-      setState(() {
-        isPaint = true;
-      });
-    }
+    return rootBundle.load(path).then((value) => decodeImageFromList(value.buffer.asUint8List()));
   }
 }
