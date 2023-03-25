@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:effect_demo/src/constant/RCColors.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 
 enum VerticalDragStatus {
   down,
@@ -131,18 +134,34 @@ class VerticalJoyStickPainter extends CustomPainter {
     /// 回调通知上层移动的数据 - y坐标
     onMove(dy);
 
-    /// 绘制底图圆角矩形
-    _paint
-      ..style = PaintingStyle.fill
-      ..color = RCColors.gray_0A1014.withOpacity(0.3);
-    canvas.drawRRect(RRect.fromRectXY(rect, rRectRadius, rRectRadius), _paint);
-
     /// 底图描边
     _paint
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1
       ..color = RCColors.gray_5F7176.withOpacity(0.3);
     canvas.drawRRect(RRect.fromRectXY(rect, rRectRadius, rRectRadius), _paint);
+
+    /// 绘制底图圆角矩形
+    _paint
+      ..style = PaintingStyle.fill
+      ..color = RCColors.gray_0A1014.withOpacity(0.3);
+    canvas.drawRRect(RRect.fromRectXY(rect, rRectRadius, rRectRadius), _paint);
+
+    /// 计算控制球在可移动范围内的滑动比值，滑动越多，相应端的指示颜色越深
+    double ratio = dy.abs() / (size.height / 2.0 - radius);
+    if (dy < 0) {
+      _paint.color = RCColors.gray_0A1014;
+      _paint.shader = ui.Gradient.linear(Offset(size.width / 2, 0), Offset(size.width / 2, size.width / 2),
+          [RCColors.blue_2FD9F8.withOpacity(ratio), RCColors.transparent]);
+      canvas.drawArc(Rect.fromLTWH(0, 0, size.width, size.width), pi, pi, false, _paint);
+      _paint.shader = null;
+    } else if (dy > 0) {
+      _paint.color = RCColors.gray_0A1014;
+      _paint.shader = ui.Gradient.linear(Offset(size.width / 2, size.height - size.width / 2),
+          Offset(size.width / 2, size.height), [RCColors.transparent, RCColors.blue_2FD9F8.withOpacity(ratio)]);
+      canvas.drawArc(Rect.fromLTWH(0, size.height - size.width, size.width, size.width), 0, pi, false, _paint);
+      _paint.shader = null;
+    }
 
     /// 绘制控制小球球
     _paint

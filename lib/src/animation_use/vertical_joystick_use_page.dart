@@ -13,7 +13,7 @@ class _VerticalJoystickUsePageState extends State<VerticalJoystickUsePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.green,
+        color: Colors.yellow,
         alignment: Alignment.center,
         child: VerticalJoyStick(
           size: const Size(50, 144),
