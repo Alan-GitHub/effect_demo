@@ -13,6 +13,7 @@ class JoyStick extends StatefulWidget {
   const JoyStick({
     Key? key,
     required this.size,
+    this.activeZoneBgColor,
     this.bigCircleImage,
     this.littleCircleImage,
     this.bigCircleImageSport,
@@ -21,10 +22,12 @@ class JoyStick extends StatefulWidget {
     required this.bgr,
     this.thresholdArc = 0,
     this.deadZoneArc = 0,
+    this.defaultOffset = Offset.zero,
     required this.onMove,
   }) : super(key: key);
 
   final Size size;
+  final Color? activeZoneBgColor; // 活动区域背景色
   final ui.Image? bigCircleImage;
   final ui.Image? littleCircleImage;
   final ui.Image? bigCircleImageSport;
@@ -33,6 +36,7 @@ class JoyStick extends StatefulWidget {
   final double bgr; // 小圆半径
   final double thresholdArc;
   final double deadZoneArc;
+  final Offset defaultOffset; // 圆心默认坐标位置-初始位置
   final void Function(double arc, double dx, double dy, double r) onMove;
 
   @override
@@ -41,34 +45,45 @@ class JoyStick extends StatefulWidget {
 
 class _JoyStickState extends State<JoyStick> {
   // 底图圆心坐标
-  final ValueNotifier<Offset> _offsetCenter = ValueNotifier(Offset.zero);
+  late final ValueNotifier<Offset> _offsetCenter;
   // 小圆圆心坐标
-  final ValueNotifier<Offset> _offset = ValueNotifier(Offset.zero);
+  late final ValueNotifier<Offset> _offset;
   // 操纵杆状态
   ValueNotifier<PanStatus> status = ValueNotifier(PanStatus.end);
 
   @override
+  void initState() {
+    super.initState();
+
+    _offsetCenter = ValueNotifier(widget.defaultOffset);
+    _offset = ValueNotifier(widget.defaultOffset);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanDown: down,
-      onPanUpdate: update,
-      onPanEnd: reset,
-      child: CustomPaint(
-        size: widget.size,
-        painter: JoyStickPainter(
-            offset: _offset,
-            bgr: widget.bgr,
-            offsetCenter: _offsetCenter,
-            bgR: widget.bgR,
-            bigCircleImage: widget.bigCircleImage,
-            littleCircleImage: widget.littleCircleImage,
-            bigCircleImageSport: widget.bigCircleImageSport,
-            littleCircleImageSport: widget.littleCircleImageSport,
-            thresholdArc: widget.thresholdArc,
-            deadZoneArc: widget.deadZoneArc,
-            status: status,
-            onMove: widget.onMove,
-            listenable: Listenable.merge([_offset, _offsetCenter])),
+    return Container(
+      color: widget.activeZoneBgColor != null ? widget.activeZoneBgColor : Colors.transparent,
+      child: GestureDetector(
+        onPanDown: down,
+        onPanUpdate: update,
+        onPanEnd: reset,
+        child: CustomPaint(
+          size: widget.size,
+          painter: JoyStickPainter(
+              offset: _offset,
+              bgr: widget.bgr,
+              offsetCenter: _offsetCenter,
+              bgR: widget.bgR,
+              bigCircleImage: widget.bigCircleImage,
+              littleCircleImage: widget.littleCircleImage,
+              bigCircleImageSport: widget.bigCircleImageSport,
+              littleCircleImageSport: widget.littleCircleImageSport,
+              thresholdArc: widget.thresholdArc,
+              deadZoneArc: widget.deadZoneArc,
+              status: status,
+              onMove: widget.onMove,
+              listenable: Listenable.merge([_offset, _offsetCenter])),
+        ),
       ),
     );
   }
@@ -95,8 +110,8 @@ class _JoyStickState extends State<JoyStick> {
 
   reset(DragEndDetails details) {
     status.value = PanStatus.end;
-    _offset.value = Offset.zero;
-    _offsetCenter.value = Offset.zero;
+    _offset.value = widget.defaultOffset;
+    _offsetCenter.value = widget.defaultOffset;
   }
 
   update(DragUpdateDetails details) {
@@ -244,7 +259,8 @@ class JoyStickPainter extends CustomPainter {
           ..color = Colors.blue.withOpacity(0.6);
         canvas.drawCircle(offsetTranslate, bgr, _paint);
       }
-    } else {  /// 手指移动中操纵杆
+    } else {
+      /// 手指移动中操纵杆
       /// 底圆
       if (bigCircleImageSport != null) {
         canvas.drawImage(bigCircleImageSport!, offsetCenterTranslate.translate(-bgR, -bgR), _paint);
