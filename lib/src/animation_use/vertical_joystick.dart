@@ -16,12 +16,20 @@ class VerticalJoyStick extends StatefulWidget {
     required this.size,
     this.rRectRadius = 0,
     required this.radius,
+    this.driveVerticalOutline,
+    this.driveVerticalControlStop,
+    this.driveVerticalControlUp,
+    this.driveVerticalControlDown,
     required this.onMove,
   });
 
   final Size size;
   final double rRectRadius;
   final double radius;
+  final ui.Image? driveVerticalOutline;
+  final ui.Image? driveVerticalControlStop;
+  final ui.Image? driveVerticalControlUp;
+  final ui.Image? driveVerticalControlDown;
   final void Function(double dy) onMove;
 
   @override
@@ -54,6 +62,10 @@ class _VerticalJoyStickState extends State<VerticalJoyStick> {
           offset: _offset,
           radius: widget.radius,
           status: status,
+          driveVerticalOutline: widget.driveVerticalOutline,
+          driveVerticalControlStop: widget.driveVerticalControlStop,
+          driveVerticalControlUp: widget.driveVerticalControlUp,
+          driveVerticalControlDown: widget.driveVerticalControlDown,
           onMove: widget.onMove,
           listenable: _offset,
         ),
@@ -104,6 +116,10 @@ class VerticalJoyStickPainter extends CustomPainter {
     required this.offset,
     required this.radius,
     required this.status,
+    this.driveVerticalOutline,
+    this.driveVerticalControlStop,
+    this.driveVerticalControlUp,
+    this.driveVerticalControlDown,
     required this.onMove,
     required Listenable listenable,
   }) : super(repaint: listenable);
@@ -120,6 +136,11 @@ class VerticalJoyStickPainter extends CustomPainter {
   /// 手势状态
   final ValueNotifier<VerticalDragStatus> status;
 
+  final ui.Image? driveVerticalOutline;
+  final ui.Image? driveVerticalControlStop;
+  final ui.Image? driveVerticalControlUp;
+  final ui.Image? driveVerticalControlDown;
+
   final void Function(double dy) onMove;
 
   final Paint _paint = Paint();
@@ -134,18 +155,12 @@ class VerticalJoyStickPainter extends CustomPainter {
     /// 回调通知上层移动的数据 - y坐标
     onMove(dy);
 
-    /// 底图描边
-    _paint
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1
-      ..color = RCColors.gray_5F7176.withOpacity(0.3);
-    canvas.drawRRect(RRect.fromRectXY(rect, rRectRadius, rRectRadius), _paint);
-
-    /// 绘制底图圆角矩形
-    _paint
-      ..style = PaintingStyle.fill
-      ..color = RCColors.gray_0A1014.withOpacity(0.3);
-    canvas.drawRRect(RRect.fromRectXY(rect, rRectRadius, rRectRadius), _paint);
+    if (driveVerticalOutline != null) {
+      canvas.drawImage(driveVerticalOutline!, Offset.zero, _paint);
+    } else {
+      canvas.drawRRect(
+          RRect.fromRectXY(rect, rRectRadius, rRectRadius), _paint..color = RCColors.gray_0A1014.withOpacity(0.3));
+    }
 
     /// 计算控制球在可移动范围内的滑动比值，滑动越多，相应端的指示颜色越深
     double ratio = dy.abs() / (size.height / 2.0 - radius);
@@ -163,65 +178,25 @@ class VerticalJoyStickPainter extends CustomPainter {
       _paint.shader = null;
     }
 
-    /// 绘制控制小球球
-    _paint
-      ..style = PaintingStyle.fill
-      ..color = RCColors.black_171E22.withOpacity(0.7);
-    canvas.drawCircle(offset.value, radius, _paint);
-
-    /// 控制小球球描边
-    _paint
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5
-      ..color = RCColors.white;
-    if (status.value != VerticalDragStatus.end) {
-      _paint.color = RCColors.blue_2FD9F8;
+    if (dy == 0) {
+      if (driveVerticalControlStop != null) {
+        canvas.drawImage(driveVerticalControlStop!, offset.value.translate(-radius, -radius), _paint);
+      } else {
+        canvas.drawCircle(offset.value, radius, _paint);
+      }
+    } else if (dy < 0) {
+      if (driveVerticalControlUp != null) {
+        canvas.drawImage(driveVerticalControlUp!, offset.value.translate(-radius, -radius), _paint);
+      } else {
+        canvas.drawCircle(offset.value, radius, _paint);
+      }
+    } else {
+      if (driveVerticalControlDown != null) {
+        canvas.drawImage(driveVerticalControlDown!, offset.value.translate(-radius, -radius), _paint);
+      } else {
+        canvas.drawCircle(offset.value, radius, _paint);
+      }
     }
-    canvas.drawCircle(offset.value, radius, _paint);
-
-    /// 小球球里面的三角形（上）
-    /// 小球球圆心坐标
-    double rx = offset.value.dx;
-    double ry = offset.value.dy;
-
-    _paint
-      ..style = PaintingStyle.fill
-      ..color = RCColors.white;
-
-    /// 适配屏幕时的缩放比例
-    double scale = radius / 24;
-
-    if (dy < 0) {
-      _paint.color = RCColors.blue_2FD9F8;
-    }
-
-    var path1 = Path();
-    path1.moveTo(rx - 6 * scale, ry - 3 * scale);
-    path1.lineTo(rx, ry - 11 * scale);
-    path1.lineTo(rx + 6 * scale, ry - 3 * scale);
-    path1.close();
-
-    if (dy < 0) {
-      drawShadows(canvas, path1, [const BoxShadow(color: RCColors.blue_2FD9F8, blurRadius: 10, spreadRadius: 12)], -1);
-    }
-    canvas.drawPath(path1, _paint);
-
-    /// 小球球里面的三角形（下）
-    _paint.color = RCColors.white;
-    if (dy > 0) {
-      _paint.color = RCColors.blue_2FD9F8;
-    }
-
-    var path2 = Path();
-    path2.moveTo(rx - 6 * scale, ry + 3 * scale);
-    path2.lineTo(rx, ry + 11 * scale);
-    path2.lineTo(rx + 6 * scale, ry + 3 * scale);
-    path2.close();
-
-    if (dy > 0) {
-      drawShadows(canvas, path2, [const BoxShadow(color: RCColors.blue_2FD9F8, blurRadius: 10, spreadRadius: 12)], 1);
-    }
-    canvas.drawPath(path2, _paint);
   }
 
   @override
