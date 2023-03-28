@@ -59,6 +59,12 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: const Text("竖直操纵杆"),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.circleProgressIndicatorDemo);
+                  },
+                  child: const Text("圆形进度条"),
+                ),
               ],
             ),
           ),

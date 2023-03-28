@@ -1,4 +1,5 @@
 import 'package:effect_demo/src/animation_use/animation_use_page.dart';
+import 'package:effect_demo/src/animation_use/circle_progress.dart';
 import 'package:effect_demo/src/animation_use/joystick_use_page.dart';
 import 'package:effect_demo/src/animation_use/vertical_joystick_use_page.dart';
 import 'package:effect_demo/src/expand_collapse/expand_collapse_page.dart';
@@ -19,6 +20,7 @@ class RouteName {
   static const String animationUsePage = 'animationUsePage';
   static const String joystickUsePage = 'joystickUsePage';
   static const String verticalJoystickUsePage = 'verticalJoystickUsePage';
+  static const String circleProgressIndicatorDemo = 'circleProgressIndicatorDemo';
 
 }
 
@@ -37,6 +39,7 @@ class RouteTable {
       RouteName.animationUsePage: (BuildContext context) =>  const AnimationUsePage(),
       RouteName.joystickUsePage: (BuildContext context) =>  const JoystickUsePage(),
       RouteName.verticalJoystickUsePage: (BuildContext context) =>  const VerticalJoystickUsePage(),
+      RouteName.circleProgressIndicatorDemo: (BuildContext context) =>  const CircleProgressIndicatorDemo(),
     };
   }
 
