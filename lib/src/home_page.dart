@@ -65,6 +65,12 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: const Text("圆形进度条"),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.imagePickerPage);
+                  },
+                  child: const Text("拾取图片或视频"),
+                ),
               ],
             ),
           ),

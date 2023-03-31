@@ -4,6 +4,7 @@ import 'package:effect_demo/src/animation_use/joystick_use_page.dart';
 import 'package:effect_demo/src/animation_use/vertical_joystick_use_page.dart';
 import 'package:effect_demo/src/expand_collapse/expand_collapse_page.dart';
 import 'package:effect_demo/src/lun_pan/context_menu.dart';
+import 'package:effect_demo/src/photo_lib/image_picker_page.dart';
 import 'package:flutter/material.dart';
 import 'package:effect_demo/src/home_page.dart';
 
@@ -21,7 +22,7 @@ class RouteName {
   static const String joystickUsePage = 'joystickUsePage';
   static const String verticalJoystickUsePage = 'verticalJoystickUsePage';
   static const String circleProgressIndicatorDemo = 'circleProgressIndicatorDemo';
-
+  static const String imagePickerPage = 'imagePickerPage';
 }
 
 ///注册路由页面
@@ -40,6 +41,7 @@ class RouteTable {
       RouteName.joystickUsePage: (BuildContext context) =>  const JoystickUsePage(),
       RouteName.verticalJoystickUsePage: (BuildContext context) =>  const VerticalJoystickUsePage(),
       RouteName.circleProgressIndicatorDemo: (BuildContext context) =>  const CircleProgressIndicatorDemo(),
+      RouteName.imagePickerPage: (BuildContext context) =>  const ImagePickerPage(),
     };
   }
 
