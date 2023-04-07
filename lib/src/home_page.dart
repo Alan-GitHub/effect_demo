@@ -71,6 +71,12 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: const Text("拾取图片或视频"),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.innerShadowPage);
+                  },
+                  child: const Text("内阴影"),
+                ),
               ],
             ),
           ),
