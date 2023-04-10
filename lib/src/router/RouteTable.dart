@@ -5,6 +5,7 @@ import 'package:effect_demo/src/animation_use/vertical_joystick_use_page.dart';
 import 'package:effect_demo/src/color_effect/inner_shadow_page.dart';
 import 'package:effect_demo/src/expand_collapse/expand_collapse_page.dart';
 import 'package:effect_demo/src/lun_pan/context_menu.dart';
+import 'package:effect_demo/src/lun_pan/context_ui.dart';
 import 'package:effect_demo/src/photo_lib/image_picker_page.dart';
 import 'package:flutter/material.dart';
 import 'package:effect_demo/src/home_page.dart';
@@ -25,6 +26,7 @@ class RouteName {
   static const String circleProgressIndicatorDemo = 'circleProgressIndicatorDemo';
   static const String imagePickerPage = 'imagePickerPage';
   static const String innerShadowPage = 'innerShadowPage';
+  static const String contextUI = 'contextUI';
 }
 
 ///注册路由页面
@@ -37,14 +39,15 @@ class RouteTable {
     return {
       RouteName.root: (BuildContext context) => const HomePage(),
       RouteName.colorEffectPage: (BuildContext context) => const ColorEffectPage(),
-      RouteName.expandCollapsePage: (BuildContext context) =>  const AnimatedContainerExample(),
-      RouteName.kindaCodeDemo: (BuildContext context) =>  const KindaCodeDemo(),
-      RouteName.animationUsePage: (BuildContext context) =>  const AnimationUsePage(),
-      RouteName.joystickUsePage: (BuildContext context) =>  const JoystickUsePage(),
-      RouteName.verticalJoystickUsePage: (BuildContext context) =>  const VerticalJoystickUsePage(),
-      RouteName.circleProgressIndicatorDemo: (BuildContext context) =>  const CircleProgressIndicatorDemo(),
-      RouteName.imagePickerPage: (BuildContext context) =>  const ImagePickerPage(),
-      RouteName.innerShadowPage: (BuildContext context) =>  const InnerShadowPage(),
+      RouteName.expandCollapsePage: (BuildContext context) => const AnimatedContainerExample(),
+      RouteName.kindaCodeDemo: (BuildContext context) => const KindaCodeDemo(),
+      RouteName.animationUsePage: (BuildContext context) => const AnimationUsePage(),
+      RouteName.joystickUsePage: (BuildContext context) => const JoystickUsePage(),
+      RouteName.verticalJoystickUsePage: (BuildContext context) => const VerticalJoystickUsePage(),
+      RouteName.circleProgressIndicatorDemo: (BuildContext context) => const CircleProgressIndicatorDemo(),
+      RouteName.imagePickerPage: (BuildContext context) => const ImagePickerPage(),
+      RouteName.innerShadowPage: (BuildContext context) => const InnerShadowPage(),
+      RouteName.contextUI: (BuildContext context) => const ContextUI(),
     };
   }
 

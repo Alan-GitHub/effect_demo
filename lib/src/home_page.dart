@@ -77,6 +77,12 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: const Text("内阴影"),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.contextUI);
+                  },
+                  child: const Text("上下文UI"),
+                ),
               ],
             ),
           ),
