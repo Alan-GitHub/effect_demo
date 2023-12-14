@@ -1,9 +1,9 @@
 import 'dart:math';
-
-import 'package:effect_demo/src/animation_use/joystick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
+
+import 'joystick.dart';
 
 class JoystickData {
   JoystickData(this.offset, this.panDetail);

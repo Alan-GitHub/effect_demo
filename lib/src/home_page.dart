@@ -1,7 +1,6 @@
-import 'package:effect_demo/src/gesture/gesture_demo.dart';
-import 'package:effect_demo/src/lun_pan/lunpan.dart';
 import 'package:effect_demo/src/router/RouteTable.dart';
 import 'package:effect_demo/src/router/nav.dart';
+import 'package:effect_demo/src/technical_points/gesture/gesture_demo.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,13 +35,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Nav.pushName(RouteName.kindaCodeDemo);
-                  },
-                  child: const Text("轮盘效果"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Nav.pushName(RouteName.animationUsePage);
+                    Nav.pushName(RouteName.animationUsePageV1);
                   },
                   child: const Text("动画入门"),
                 ),
@@ -82,6 +75,18 @@ class _HomePageState extends State<HomePage> {
                     Nav.pushName(RouteName.contextUI);
                   },
                   child: const Text("上下文UI"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.streamBuilderUsePage);
+                  },
+                  child: const Text("StreamBuilder使用"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Nav.pushName(RouteName.isolateUsePage);
+                  },
+                  child: const Text("isolate使用"),
                 ),
               ],
             ),

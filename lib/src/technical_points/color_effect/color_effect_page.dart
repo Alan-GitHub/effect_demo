@@ -1,8 +1,9 @@
-import 'package:effect_demo/src/color_effect/color_mix_effect_linear.dart';
-import 'package:effect_demo/src/color_effect/color_mix_effect_radial.dart';
-import 'package:effect_demo/src/color_effect/color_mix_effect_sweep.dart';
-import 'package:effect_demo/src/color_effect/color_mix_effect_text.dart';
 import 'package:flutter/material.dart';
+
+import 'color_mix_effect_linear.dart';
+import 'color_mix_effect_radial.dart';
+import 'color_mix_effect_sweep.dart';
+import 'color_mix_effect_text.dart';
 
 class ColorEffectPage extends StatefulWidget {
   const ColorEffectPage({super.key});

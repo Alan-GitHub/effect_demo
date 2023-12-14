@@ -20,22 +20,23 @@ class _AnimatedContainerExampleState extends State<AnimatedContainerExample> wit
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           AnimatedContainer(
-              width: 50,
-              height: _size,
-              color: Colors.green,
-              duration: const Duration(milliseconds: 80),
-              child: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: const [
-                    IconButton(onPressed: null, icon: Icon(Icons.video_call)),
-                    IconButton(onPressed: null, icon: Icon(Icons.phone)),
-                    IconButton(onPressed: null, icon: Icon(Icons.mic)),
-                    IconButton(onPressed: null, icon: Icon(Icons.close)),
-                    IconButton(onPressed: null, icon: Icon(Icons.backpack)),
-                  ],
-                ),
-              ))
+            width: 50,
+            height: _size,
+            color: Colors.green,
+            duration: const Duration(milliseconds: 80),
+            child: const SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  IconButton(onPressed: null, icon: Icon(Icons.video_call)),
+                  IconButton(onPressed: null, icon: Icon(Icons.phone)),
+                  IconButton(onPressed: null, icon: Icon(Icons.mic)),
+                  IconButton(onPressed: null, icon: Icon(Icons.close)),
+                  IconButton(onPressed: null, icon: Icon(Icons.backpack)),
+                ],
+              ),
+            ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(

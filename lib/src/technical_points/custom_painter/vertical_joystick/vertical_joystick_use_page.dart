@@ -1,4 +1,4 @@
-import 'package:effect_demo/src/animation_use/vertical_joystick.dart';
+import 'package:effect_demo/src/technical_points/custom_painter/vertical_joystick/vertical_joystick.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
