@@ -17,8 +17,7 @@ class _AnimationUsePageV1State extends State<AnimationUsePageV1> with SingleTick
     super.initState();
 
     _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
-    CurvedAnimation curve = CurvedAnimation(parent: _controller, curve: ShakeCurve());
-    _animation = Tween<double>(begin: 0, end: 300).animate(curve)
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.linear)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           _controller.reverse();
@@ -45,17 +44,23 @@ class _AnimationUsePageV1State extends State<AnimationUsePageV1> with SingleTick
 class AnimatedLogo extends AnimatedWidget {
   const AnimatedLogo({super.key, required Animation<double> animation}) : super(listenable: animation);
 
+  static final _opacityTween = Tween<double>(begin: 0.0, end: 1);
+  static final _sizeTween = Tween<double>(begin: 0, end: 300);
+
   @override
   Widget build(BuildContext context) {
     final animation = listenable as Animation<double>;
     return ColoredBox(
       color: RCColors.white,
       child: Center(
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          height: animation.value,
-          width: animation.value,
-          child: const FlutterLogo(),
+        child: Opacity(
+          opacity: _opacityTween.evaluate(animation),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            height: _sizeTween.evaluate(animation),
+            width: _sizeTween.evaluate(animation),
+            child: const FlutterLogo(),
+          ),
         ),
       ),
     );
