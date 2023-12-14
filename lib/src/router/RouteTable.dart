@@ -1,4 +1,5 @@
 import 'package:effect_demo/src/technical_points/animation/animation_use_page_v1.dart';
+import 'package:effect_demo/src/technical_points/animation/hero_animation_page.dart';
 import 'package:effect_demo/src/technical_points/isolate/isolate_use_page.dart';
 import 'package:effect_demo/src/technical_points/streambuilder/streambuilder_use_page.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class RouteName {
   static const String expandCollapsePage = 'expandCollapsePage';
   static const String animationUsePage = 'animationUsePage';
   static const String animationUsePageV1 = 'animationUsePageV1';
+  static const String heroAnimationPage = 'heroAnimationPage';
   static const String joystickUsePage = 'joystickUsePage';
   static const String verticalJoystickUsePage = 'verticalJoystickUsePage';
   static const String circleProgressIndicatorDemo = 'circleProgressIndicatorDemo';
@@ -45,6 +47,7 @@ class RouteTable {
       RouteName.expandCollapsePage: (BuildContext context) => const AnimatedContainerExample(),
       RouteName.animationUsePage: (BuildContext context) => const AnimationUsePage(),
       RouteName.animationUsePageV1: (BuildContext context) => const AnimationUsePageV1(),
+      RouteName.heroAnimationPage: (BuildContext context) => const HeroAnimationPage(),
       RouteName.joystickUsePage: (BuildContext context) => const JoystickUsePage(),
       RouteName.verticalJoystickUsePage: (BuildContext context) => const VerticalJoystickUsePage(),
       RouteName.circleProgressIndicatorDemo: (BuildContext context) => const CircleProgressIndicatorDemo(),

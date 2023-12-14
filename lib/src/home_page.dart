@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Nav.pushName(RouteName.animationUsePageV1);
+                    Nav.pushName(RouteName.heroAnimationPage);
                   },
                   child: const Text("动画入门"),
                 ),
